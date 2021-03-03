@@ -30,7 +30,7 @@ class FlutterBook extends StatelessWidget {
   Widget build(BuildContext inContext) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 1,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
             title: Text('FlutterBook'),
@@ -39,14 +39,14 @@ class FlutterBook extends StatelessWidget {
                 // Tab(icon: Icon(Icons.date_range), text: "Appoinments"),
                 // Tab(icon: Icon(Icons.contacts), text: "Contacts"),
                 Tab(icon: Icon(Icons.note), text: "Notes"),
-                // Tab(icon: Icon(Icons.assignment_turned_in), text: "Tasks")
+                Tab(icon: Icon(Icons.assignment_turned_in), text: "Tasks")
               ],
             ),
           ),
           body: TabBarView(
             children: [
               // Appoinments(), Contacts(), Notes(), Tasks()
-              Notes()
+              Notes(), Tasks()
             ],
           ),
         ),

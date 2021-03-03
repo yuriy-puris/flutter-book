@@ -18,7 +18,7 @@ class NotesEntry extends StatelessWidget {
       notesModel.entityBeingEdited.content = _contentEditingController.text;
     });
   }
-
+  
   Widget build(BuildContext inContext) {
     _titleEditingController.text = notesModel.entityBeingEdited.title;
     _contentEditingController.text = notesModel.entityBeingEdited.content;
