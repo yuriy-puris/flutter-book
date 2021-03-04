@@ -17,7 +17,7 @@ class TasksEntry extends StatelessWidget {
   }
   
   Widget build(BuildContext inContext) {
-    _descriptionEditingController.text = tasksModel.entityBeingEdited.description;
+    _descriptionEditingController.text = tasksModel.entityBeingEdited?.description;
     return ScopedModel(
       model: tasksModel,
       child: ScopedModelDescendant<TasksModel>(
