@@ -14,7 +14,6 @@ import 'notes/Notes.dart';
 import 'tasks/Tasks.dart';
 import 'utils.dart' as utils;
 
-
 void main() {
   startMeUp() async {
     await WidgetsFlutterBinding.ensureInitialized();
@@ -22,38 +21,34 @@ void main() {
     utils.docsDir = docsDir;
     runApp(FlutterBook());
   }
+
   startMeUp();
 }
 
 class FlutterBook extends StatelessWidget {
-
   Widget build(BuildContext inContext) {
     return MaterialApp(
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text('FlutterBook'),
-            bottom: TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.date_range), text: "Appointments"),
-                // Tab(icon: Icon(Icons.contacts), text: "Contacts"),
-                Tab(icon: Icon(Icons.note), text: "Notes"),
-                Tab(icon: Icon(Icons.assignment_turned_in), text: "Tasks")
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              // Appoinments(), Contacts(), Notes(), Tasks()
-               Appointments(), Notes(), Tasks()
+        home: DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('FlutterBook'),
+          bottom: TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.date_range), text: "Appointments"),
+              // Tab(icon: Icon(Icons.contacts), text: "Contacts"),
+              Tab(icon: Icon(Icons.note), text: "Notes"),
+              Tab(icon: Icon(Icons.assignment_turned_in), text: "Tasks")
             ],
           ),
         ),
-      )
-    );
+        body: TabBarView(
+          children: [
+            // Appoinments(), Contacts(), Notes(), Tasks()
+            Appointments(), Notes(), Tasks()
+          ],
+        ),
+      ),
+    ));
   }
-
 }
-
-

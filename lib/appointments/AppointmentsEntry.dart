@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'TasksDBWorker.dart';
-import 'TasksModel.dart' show TasksModel, tasksModel;
+import 'AppointmentsDBWorker.dart';
+import 'AppointmentsModel.dart' show AppointmentsModel, appointmentsModel;
 import '../utils.dart' as utils;
 
-
-class TasksEntry extends StatelessWidget {
-
-  final TextEditingController _descriptionEditingController = TextEditingController();
+class AppointmentsEntry extends StatelessWidget {
+  final TextEditingController _descriptionEditingController =
+      TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TasksEntry() {
+  AppointmentsEntry() {
     _descriptionEditingController.addListener(() {
-      tasksModel.entityBeingEdited.description = _descriptionEditingController.text;
+      appointmentsModel.entityBeingEdited.description =
+          _descriptionEditingController.text;
     });
   }
-  
+
   Widget build(BuildContext inContext) {
-    _descriptionEditingController.text = tasksModel.entityBeingEdited?.description;
+    _descriptionEditingController.text =
+        appointmentsModel.entityBeingEdited?.description;
     return ScopedModel(
-      model: tasksModel,
-      child: ScopedModelDescendant<TasksModel>(
-        builder: (BuildContext inContext, Widget inChild, TasksModel inModel) {
+        model: appointmentsModel,
+        child: ScopedModelDescendant<AppointmentsModel>(builder:
+            (BuildContext inContext, Widget inChild,
+                AppointmentsModel inModel) {
           return Scaffold(
             bottomNavigationBar: Padding(
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -38,7 +40,7 @@ class TasksEntry extends StatelessWidget {
                   FlatButton(
                     child: Text('Save'),
                     onPressed: () {
-                      _save(inContext, tasksModel);
+                      _save(inContext, appointmentsModel);
                     },
                   )
                 ],
@@ -51,60 +53,64 @@ class TasksEntry extends StatelessWidget {
                   ListTile(
                     leading: Icon(Icons.title),
                     title: TextFormField(
-                      decoration: InputDecoration(hintText: 'Description'),
-                      controller: _descriptionEditingController,
-                      validator: (String inValue) {
-                        if ( inValue.length == 0 ) {
-                          return 'Please enter a description';
-                        }
-                        return null;
-                      }
-                    ),
+                        decoration: InputDecoration(hintText: 'Description'),
+                        controller: _descriptionEditingController,
+                        validator: (String inValue) {
+                          if (inValue.length == 0) {
+                            return 'Please enter a description';
+                          }
+                          return null;
+                        }),
                   ),
                   ListTile(
-                    leading: Icon(Icons.today),
-                    title: Text('Due date'),
-                    subtitle: Text(
-                      tasksModel.chosenDate == null ? '' : tasksModel.chosenDate
-                    ),
+                    leading: Icon(Icons.alarm),
+                    title: Text('Time'),
+                    subtitle: Text(appointmentsModel.apptTime == null
+                        ? ''
+                        : appointmentsModel.apptTime),
                     trailing: IconButton(
-                      icon: Icon(Icons.edit),
-                      color: Colors.blue,
-                      onPressed: () async {
-                        String chosenDate = await utils.selectDate(
-                          inContext, tasksModel, tasksModel.entityBeingEdited.dueDate
-                        );
-                        if ( chosenDate != null ) {
-                          tasksModel.entityBeingEdited.dueDate = chosenDate;
-                        }
-                      },
-                    ),
+                        icon: Icon(Icons.edit),
+                        color: Colors.blue,
+                        onPressed: () => _selectTime(inContext)),
                   )
                 ],
               ),
             ),
           );
-        }
-      )
-    );
+        }));
   }
 
-  // void _save(BuildContext inContext, TasksModel inModel) async {
-  //   if ( !_formKey.currentState.validate() ) { return; }
-  //   if ( inModel.entityBeingEdited.id == null ) {
-  //     await TasksDBWorker.db.create(tasksModel.entityBeingEdited);
-  //   } else {
-  //     await TasksDBWorker.db.update(tasksModel.entityBeingEdited);
-  //   }
-  //   tasksModel.loadData('tasks', TasksDBWorker.db);
-  //   inModel.setStackIndex(0);
-  //   Scaffold.of(inContext).showSnackBar(
-  //     SnackBar(
-  //       backgroundColor: Colors.green,
-  //       duration: Duration(seconds: 2),
-  //       content: Text('Task saved'),
-  //     )
-  //   );
-  // }
+  Future _selectTime(BuildContext inContext) async {
+    TimeOfDay initialTime = TimeOfDay.now();
+    if (appointmentsModel.entityBeingEdited.apptTime != null) {
+      List timeParts = appointmentsModel.entityBeingEdited.apptTime.split(',');
+      initialTime = TimeOfDay(
+          hour: int.parse(timeParts[0]), minute: int.parse(timeParts[1]));
+    }
+    TimeOfDay picked =
+        await showTimePicker(context: inContext, initialTime: initialTime);
+    if (picked != null) {
+      appointmentsModel.entityBeingEdited.apptTime =
+          '${picked.hour},${picked.minute}';
+      appointmentsModel.setApptTime(picked.format(inContext));
+    }
+  }
 
+  void _save(BuildContext inContext, AppointmentsModel inModel) async {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
+    if (inModel.entityBeingEdited.id == null) {
+      await AppointmentsDBWorker.db.create(appointmentsModel.entityBeingEdited);
+    } else {
+      await AppointmentsDBWorker.db.update(appointmentsModel.entityBeingEdited);
+    }
+    appointmentsModel.loadData('appointments', AppointmentsDBWorker.db);
+    inModel.setStackIndex(0);
+    Scaffold.of(inContext).showSnackBar(SnackBar(
+      backgroundColor: Colors.green,
+      duration: Duration(seconds: 2),
+      content: Text('Task saved'),
+    ));
+  }
 }
