@@ -1,5 +1,6 @@
-import 'dart:html';
-import 'package:path/path.dart' as p;
+import 'dart:async';
+import 'dart:io';
+import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -17,12 +18,18 @@ class ContactsList extends StatelessWidget {
             floatingActionButton: FloatingActionButton(
               child: Icon(Icons.add, color: Colors.white),
               onPressed: () async {
-                File avatarFile = File(join(utils.docsDir.path, ['avatar']));
+                File avatarFile = File(join(utils.docsDir.path, 'avatar'));
+                if ( avatarFile.existsSync() ) {
+                  avatarFile.deleteSync();
+                }
+                contactsModel.entityBeingEdited = Contact();
+                contactsModel.setChosenDate(null);
+                contactsModel.setStackIndex(1);
               },
             ),
           );
         }
       )
-    )
+    );
   }
 }
