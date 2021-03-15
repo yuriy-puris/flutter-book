@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_test/contacts/ContactsModel.dart';
 import 'package:scoped_model/scoped_model.dart';
 // import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -29,24 +30,21 @@ class FlutterBook extends StatelessWidget {
   Widget build(BuildContext inContext) {
     return MaterialApp(
         home: DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: Text('FlutterBook'),
           bottom: TabBar(
             tabs: [
               Tab(icon: Icon(Icons.date_range), text: "Appointments"),
-              // Tab(icon: Icon(Icons.contacts), text: "Contacts"),
               Tab(icon: Icon(Icons.note), text: "Notes"),
-              Tab(icon: Icon(Icons.assignment_turned_in), text: "Tasks")
+              Tab(icon: Icon(Icons.assignment_turned_in), text: "Tasks"),
+              Tab(icon: Icon(Icons.contacts), text: "Contacts")
             ],
           ),
         ),
         body: TabBarView(
-          children: [
-            // Appoinments(), Contacts(), Notes(), Tasks()
-            Appointments(), Notes(), Tasks()
-          ],
+          children: [Appointments(), Notes(), Tasks(), Contacts()],
         ),
       ),
     ));

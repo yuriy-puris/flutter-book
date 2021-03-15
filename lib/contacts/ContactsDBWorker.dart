@@ -59,7 +59,7 @@ class ContactsDBWorker {
     }
     return await db.rawInsert(
         "INSERT INTO contacts (id, name, phone, email, birthday) "
-        "VALUES (?, ?, ?, ?)",
+        "VALUES (?, ?, ?, ?, ?)",
         [
           id,
           inContact.name,
@@ -69,7 +69,7 @@ class ContactsDBWorker {
         ]);
   }
 
-  Future<Contact> get(int inID) async {
+  Future<Contact> get(inID) async {
     Database db = await database;
     var rec = await db.query("contacts", where: "id = ?", whereArgs: [inID]);
     return contactFromMap(rec.first);
@@ -77,7 +77,7 @@ class ContactsDBWorker {
 
   Future<List> getAll() async {
     Database db = await database;
-    var recs = await db.query('contact');
+    var recs = await db.query('contacts');
     var list = recs.isNotEmpty
         ? recs.map((note) => contactFromMap(note)).toList()
         : [];
@@ -90,7 +90,7 @@ class ContactsDBWorker {
         where: "id = ?", whereArgs: [inContact.id]);
   }
 
-  Future delete(int inID) async {
+  Future delete(inID) async {
     Database db = await database;
     return await db.delete('contacts', where: "id = ?", whereArgs: [inID]);
   }
